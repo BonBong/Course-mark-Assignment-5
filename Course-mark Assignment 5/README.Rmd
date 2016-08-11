@@ -185,6 +185,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(knitr)
+library(MASS)
 
 # import dataset
 nnausea <- read.csv("nausea.csv")
@@ -199,7 +200,8 @@ nausea
 nausea.regr <- select(nausea, Nausea_before, Nausea_after, -Patient)
 nausea.regr
 
-plot(nausea$Nausea_before~nause
+with(nausea, plot(paired(Nausea_before, Nausea_after), type = "profile"))
+
 ```
 
 ## Statistical Test
