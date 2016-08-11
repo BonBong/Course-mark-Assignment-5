@@ -127,15 +127,7 @@ pairwise.t.test(chkwts$weight, chkwts$feed,
 
 ##Alternative Hypothesis 
 * Consumption of contaminated water causes gastroenteritis. 
-##Statistical Test
-* Pearson's Chi-square test & Fischer's Exact Test
-* X-squared = 74.925, degrees of freedom = 2, p value < 2.2e-16
 
-### Test Assumptions:
-* random sampling
-* independent observations
-* large sample size
-* discrete probability in observed frequencies within the table can be estimated by the continuous X^2^ distribution
 ```{r the_hot_zone, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
 library(tidyr)
 library(dplyr)
@@ -153,5 +145,72 @@ gastroX <- xtabs(~Consumption + Outcome,
 gastroX
 
 # plot gastroX
-barplot(gastroX, beside = TRUE)
+barplot(gastroX, beside = TRUE,
+        main = "Relationship between gastroenteritis presentation and the amount of consumed contaminated water by people in a small town",
+        xlab = "Presentation",
+        ylab = "Number of People",
+        col = c("black", "red", "grey"))
 
+par(xpd = TRUE)
+legend("topright", c("< 1 glass/day", "< 4 glasses/day", "1 to 4 glasses/day"), bty = "n", fill = c("black", "red", "grey"))
+
+# Statistics (Pearson's Chi-squared Test)
+ ChiSq <- chisq.test(gastroX, correct = FALSE)
+ ChiSq
+```
+##Statistical Test
+* Pearson's Chi-square test
+* X-squared = 74.925, degrees of freedom = 2, p value < 2.2e-16
+
+### Test Assumptions:
+* random sampling
+* independent observations
+* large sample size
+* discrete probability in observed frequencies within the table can be estimated by the continuous X^2^ distribution
+
+##Outcome Analysis
+* The p value indicates a significant relationship between the amount of contaminated water consumed and whether or not a given individual presented with gastroenteritis. Namely, the amount of contaminated water consumed was directly proportional to gastroenteritis incidences.
+* Therefore, reject the null hypothesis.
+
+#NAUSEA
+
+##Null Hypothesis
+* Administration of 5HT3 receptor antagonist does not ameliorate nausea intensity. 
+
+##Alternative Hypothesis
+* Administration of 5HT3 receptor antagonist decreases nausea intensity. 
+
+```{r Nausea, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+# import dataset
+nnausea <- read.csv("nausea.csv")
+nausea <- tbl_df(nnausea)
+nausea
+
+# On the assumption that the value '40' in the "Nausea after", column is incorrect, I've assumed it is really '4'.Therefore I've changed it.
+nausea[8,3] =4
+nausea
+
+# Removing the "Patient Coluumn" for the purposes of plotting with base graphics
+nausea.regr <- select(nausea, Nausea_before, Nausea_after, -Patient)
+nausea.regr
+
+plot(nausea$Nausea_before~nause
+```
+
+## Statistical Test
+* Paired T test
+* t = 3.3072, degrees of freedom = 7, p value = 0.01299
+
+###Test Assumptions:
+* Gaussian distribution 
+* equal variance amongst groups 
+* independent errors
+* effective data matching 
+
+#Outcome Analysis
+* 

@@ -340,16 +340,7 @@ Null Hypothesis
 Alternative Hypothesis
 ----------------------
 
--   Consumption of contaminated water causes gastroenteritis. \#\#Statistical Test
--   Pearson's Chi-square test & Fischer's Exact Test
--   X-squared = 74.925, degrees of freedom = 2, p value &lt; 2.2e-16
-
-### Test Assumptions:
-
--   random sampling
--   independent observations
--   large sample size
--   discrete probability in observed frequencies within the table can be estimated by the continuous X<sup>2</sup> distribution
+-   Consumption of contaminated water causes gastroenteritis.
 
 ``` r
 library(tidyr)
@@ -404,7 +395,44 @@ gastroX
 
 ``` r
 # plot gastroX
-barplot(gastroX, beside = TRUE)
+barplot(gastroX, beside = TRUE,
+        main = "Relationship between gastroenteritis presentation and the amount of consumed contaminated water by people in a small town",
+        xlab = "Presentation",
+        ylab = "Number of People",
+        col = c("black", "red", "grey"))
+
+par(xpd = TRUE)
+legend("topright", c("< 1 glass/day", "< 4 glasses/day", "1 to 4 glasses/day"), bty = "n", fill = c("black", "red", "grey"))
 ```
 
 <img src="./figures.the_hot_zone-1.svg" style="display: block; margin: auto;" />
+
+``` r
+# Statistics (Pearson's Chi-squared Test)
+ ChiSq <- chisq.test(gastroX, correct = FALSE)
+ ChiSq
+```
+
+    ## 
+    ##  Pearson's Chi-squared test
+    ## 
+    ## data:  gastroX
+    ## X-squared = 74.925, df = 2, p-value < 2.2e-16
+
+Statistical Test
+----------------
+
+-   Pearson's Chi-square test
+-   X-squared = 74.925, degrees of freedom = 2, p value &lt; 2.2e-16
+
+### Test Assumptions:
+
+-   random sampling
+-   independent observations
+-   large sample size
+-   discrete probability in observed frequencies within the table can be estimated by the continuous X<sup>2</sup> distribution
+
+Outcome Analysis
+----------------
+
+-   The p value indicates a significant relationship between the amount of contaminated water consumed and whether or not a given individual presented with gastroenteritis. Namely, the amount of contaminated water consumed was directly proportional to gastroenteritis incidences.
