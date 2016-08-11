@@ -146,5 +146,12 @@ library(knitr)
 gastroe <- read.csv("hotzone.csv")
 gastro <- tbl_df(gastroe)
 head(gastro)
+tail(gastro)
+# Cross tabulate with xtabs
+gastroX <- xtabs(~Consumption + Outcome,
+      data = gastro)
+gastroX
 
-# Explore data with plots
+# plot gastroX
+barplot(gastroX, beside = TRUE)
+

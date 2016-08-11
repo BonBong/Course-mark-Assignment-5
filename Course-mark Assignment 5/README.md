@@ -250,7 +250,6 @@ library(knitr)
 # import dataset
 chkwt <- read.csv("chkwts.csv")
 chkwts <- tbl_df(chkwt)
-rm(chkwt)
 chkwts
 ```
 
@@ -332,3 +331,80 @@ Outcome Analysis
 
 THE HOT ZONE
 ============
+
+Null Hypothesis
+---------------
+
+-   There is no relationship beween consumption of contaminated water and presentation with gastroenteritis.
+
+Alternative Hypothesis
+----------------------
+
+-   Consumption of contaminated water causes gastroenteritis. \#\#Statistical Test
+-   Pearson's Chi-square test & Fischer's Exact Test
+-   X-squared = 74.925, degrees of freedom = 2, p value &lt; 2.2e-16
+
+### Test Assumptions:
+
+-   random sampling
+-   independent observations
+-   large sample size
+-   discrete probability in observed frequencies within the table can be estimated by the continuous X<sup>2</sup> distribution
+
+``` r
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+# import dataset
+gastroe <- read.csv("hotzone.csv")
+gastro <- tbl_df(gastroe)
+head(gastro)
+```
+
+    ## Source: local data frame [6 x 2]
+    ## 
+    ##       Consumption Outcome
+    ##            <fctr>  <fctr>
+    ## 1 < 1 glasses/day     ill
+    ## 2 < 1 glasses/day     ill
+    ## 3 < 1 glasses/day     ill
+    ## 4 < 1 glasses/day     ill
+    ## 5 < 1 glasses/day     ill
+    ## 6 < 1 glasses/day     ill
+
+``` r
+tail(gastro)
+```
+
+    ## Source: local data frame [6 x 2]
+    ## 
+    ##       Consumption Outcome
+    ##            <fctr>  <fctr>
+    ## 1 < 4 glasses/day not ill
+    ## 2 < 4 glasses/day not ill
+    ## 3 < 4 glasses/day not ill
+    ## 4 < 4 glasses/day not ill
+    ## 5 < 4 glasses/day not ill
+    ## 6 < 4 glasses/day not ill
+
+``` r
+# Cross tabulate with xtabs
+gastroX <- xtabs(~Consumption + Outcome,
+      data = gastro)
+gastroX
+```
+
+    ##                     Outcome
+    ## Consumption          ill not ill
+    ##   < 1 glasses/day     39     121
+    ##   < 4 glasses/day    265     146
+    ##   1 to 4 glasses/day 265     258
+
+``` r
+# plot gastroX
+barplot(gastroX, beside = TRUE)
+```
+
+<img src="./figures.the_hot_zone-1.svg" style="display: block; margin: auto;" />
