@@ -1,7 +1,7 @@
 ---
-title: "Assignment 4"
+title: "Assignment 5"
 author: "Bongani Mveng"
-date: "11 July 2016"
+date: "11 August 2016"
 output: github_document
 ---
 
@@ -72,3 +72,79 @@ sum <- summarize(grouped.2, mean(Measurement))
 sum
 ```
 
+#CHICKEN WEIGHTS
+
+##Null Hypothesis
+* No relationship exists between type of feed supplement and chick weight.
+
+##Alternative Hypothesis
+* The feed supplement most resemblant of the wild type nutrient will promote the highest weight gain in the chicks.
+```{r chicken_weights, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+# import dataset
+chkwt <- read.csv("chkwts.csv")
+chkwts <- tbl_df(chkwt)
+chkwts
+
+# Explore data with plots
+qplot(x = feed,
+      y = weight,
+      data = chkwts,
+      geom = "boxplot",
+      xlab = "Feed",
+      ylab = "Weight (g)",
+      main = "Neonate chicks' weight per feed supplement type")
+
+# Statistical Test (ANOVA)
+ANO.VA <- aov(weight~feed, data = chkwts)
+summary(ANO.VA)
+
+# Correct for multiple comparisons using Bonferroni post hoc test
+pairwise.t.test(chkwts$weight, chkwts$feed,
+                p.adjust.method = 'bonferroni',
+                paired = FALSE)
+```
+
+##Test Assumptions
+* Gaussian distribution
+* Equal variance amongst groups
+* Independent errors
+* Data are unmatched
+
+##Outcome Analysis
+* Casein promotes the most growth out of all the feed supplements, while horsebean promotes the least. There is no statistical difference between the  casein, meat meal, and sunflower supplements, suggesting that the latter two are as statistically efficient in promoting growth. However, this does not signify biological efficiency. 
+* Therefore, we reject the null hypothesis
+
+#THE HOT ZONE
+
+##Null Hypothesis 
+* There is no relationship beween consumption of contaminated water and presentation with gastroenteritis. 
+
+##Alternative Hypothesis 
+* Consumption of contaminated water causes gastroenteritis. 
+##Statistical Test
+* Pearson's Chi-square test & Fischer's Exact Test
+* X-squared = 74.925, degrees of freedom = 2, p value < 2.2e-16
+
+### Test Assumptions:
+* random sampling
+* independent observations
+* large sample size
+* discrete probability in observed frequencies within the table can be estimated by the continuous X^2^ distribution
+```{r the_hot_zone, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+# import dataset
+gastroe <- read.csv("hotzone.csv")
+gastro <- tbl_df(gastroe)
+head(gastro)
+
+# Explore data with plots
