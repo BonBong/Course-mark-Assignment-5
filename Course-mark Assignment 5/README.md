@@ -436,3 +436,100 @@ Outcome Analysis
 ----------------
 
 -   The p value indicates a significant relationship between the amount of contaminated water consumed and whether or not a given individual presented with gastroenteritis. Namely, the amount of contaminated water consumed was directly proportional to gastroenteritis incidences.
+-   Therefore, reject the null hypothesis.
+
+NAUSEA
+======
+
+Null Hypothesis
+---------------
+
+-   Administration of 5HT3 receptor antagonist does not ameliorate nausea intensity.
+
+Alternative Hypothesis
+----------------------
+
+-   Administration of 5HT3 receptor antagonist decreases nausea intensity.
+
+``` r
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+
+# import dataset
+nnausea <- read.csv("nausea.csv")
+nausea <- tbl_df(nnausea)
+nausea
+```
+
+    ## Source: local data frame [8 x 3]
+    ## 
+    ##   Patient Nausea_before Nausea_after
+    ##     <int>         <int>        <int>
+    ## 1       1             3            2
+    ## 2       2             4            0
+    ## 3       3             6            1
+    ## 4       4             2            3
+    ## 5       5             2            1
+    ## 6       6             4            1
+    ## 7       7             5            0
+    ## 8       8             6           40
+
+``` r
+# On the assumption that the value '40' in the "Nausea after" column was entered incorrectly I've changed the value to '4', as the current value exceeds the pain scale's range. 
+nausea[8,3] = 4
+nausea
+```
+
+    ## Source: local data frame [8 x 3]
+    ## 
+    ##   Patient Nausea_before Nausea_after
+    ##     <int>         <int>        <dbl>
+    ## 1       1             3            2
+    ## 2       2             4            0
+    ## 3       3             6            1
+    ## 4       4             2            3
+    ## 5       5             2            1
+    ## 6       6             4            1
+    ## 7       7             5            0
+    ## 8       8             6            4
+
+``` r
+# plot the data
+
+
+# Statistical test (Paired T-test)
+gastro.stat <- t.test(nausea$Nausea_before, nausea$Nausea_after, paired = TRUE)
+gastro.stat
+```
+
+    ## 
+    ##  Paired t-test
+    ## 
+    ## data:  nausea$Nausea_before and nausea$Nausea_after
+    ## t = 3.3072, df = 7, p-value = 0.01299
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  0.7125121 4.2874879
+    ## sample estimates:
+    ## mean of the differences 
+    ##                     2.5
+
+Statistical Test
+----------------
+
+-   Paired T test
+-   t = 3.3072, degrees of freedom = 7, p value = 0.01299
+
+### Test Assumptions:
+
+-   Gaussian distribution
+-   equal variance amongst groups
+-   independent errors
+-   effective data matching
+
+Outcome Analysis
+================
+
+-   Ratings of nausea intensity significantly decreased following adminisatration of the 5HT3 receptor antagonist. Therefore reject the null hypothesis.

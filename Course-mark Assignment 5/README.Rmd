@@ -79,7 +79,7 @@ sum
 
 ##Alternative Hypothesis
 * The feed supplement most resemblant of the wild type nutrient will promote the highest weight gain in the chicks.
-```{r chicken_weights, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
+```{r chicken_weights, echo = TRUE}
 
 library(tidyr)
 library(dplyr)
@@ -128,7 +128,7 @@ pairwise.t.test(chkwts$weight, chkwts$feed,
 ##Alternative Hypothesis 
 * Consumption of contaminated water causes gastroenteritis. 
 
-```{r the_hot_zone, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
+```{r the_hot_zone, echo = TRUE}
 library(tidyr)
 library(dplyr)
 library(ggplot2)
@@ -139,10 +139,13 @@ gastroe <- read.csv("hotzone.csv")
 gastro <- tbl_df(gastroe)
 head(gastro)
 tail(gastro)
+
+
 # Cross tabulate with xtabs
 gastroX <- xtabs(~Consumption + Outcome,
       data = gastro)
 gastroX
+
 
 # plot gastroX
 barplot(gastroX, beside = TRUE,
@@ -180,39 +183,44 @@ legend("topright", c("< 1 glass/day", "< 4 glasses/day", "1 to 4 glasses/day"), 
 ##Alternative Hypothesis
 * Administration of 5HT3 receptor antagonist decreases nausea intensity. 
 
-```{r Nausea, echo = TRUE, fig.width = 8, fig.height = 8, fig.align = "center", fig.path = "./figures.", dev = "svg"}
+```{r Nausea, echo = TRUE}
 library(tidyr)
 library(dplyr)
-library(ggplot2)
 library(knitr)
-library(MASS)
 
 # import dataset
 nnausea <- read.csv("nausea.csv")
 nausea <- tbl_df(nnausea)
 nausea
 
-# On the assumption that the value '40' in the "Nausea after", column is incorrect, I've assumed it is really '4'.Therefore I've changed it.
-nausea[8,3] =4
+# On the assumption that the value '40' in the "Nausea after" column was entered incorrectly I've changed the value to '4', as the current value exceeds the pain scale's range. 
+nausea[8,3] = 4
 nausea
 
-# Removing the "Patient Coluumn" for the purposes of plotting with base graphics
-nausea.regr <- select(nausea, Nausea_before, Nausea_after, -Patient)
-nausea.regr
+# plot the data
+plot(nausea$Nausea_before~nausea$Patient,
+     col = "red",
+     type = "o",
+     ylim = c(0,6),
+     ylab = "Nausea Rating",
+     xlab = "Patient",
+     main = "Nausea intensity ratings before and after adminisatration of 5HT3 receptor antagonist",
+     points(nausea$Nausea_before~nausea$Patient))
+lines(nausea$Nausea_after~nausea$Patient, col = "black")
+points(nausea$Nausea_after~nausea$Patient, col = "black")
+legend(4,6, c("Nausea before", "Nausea after"), fill = c("red", "black"))
 
-with(nausea, plot(paired(Nausea_before, Nausea_after), type = "profile"))
-
+# Statistical test (Wilcoxin Signed-rank Test)
+wilcox.test(nausea$Nausea_before, nausea$Nausea_after, paired = TRUE)
 ```
 
 ## Statistical Test
-* Paired T test
-* t = 3.3072, degrees of freedom = 7, p value = 0.01299
+* Wilcoxin signed-rank test
 
 ###Test Assumptions:
-* Gaussian distribution 
-* equal variance amongst groups 
+* central limit therem applies  
 * independent errors
 * effective data matching 
 
 #Outcome Analysis
-* 
+* Ratings of nausea intensity significantly decreased following adminisatration of the 5HT3 receptor antagonist. Therefore, reject the null hypothesis.
