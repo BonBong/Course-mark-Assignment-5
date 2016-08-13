@@ -280,7 +280,7 @@ qplot(x = feed,
       main = "Neonate chicks' weight per feed supplement type")
 ```
 
-<img src="./figures.chicken_weights-1.svg" style="display: block; margin: auto;" />
+![](README_files/figure-markdown_github/chicken_weights-1.png)
 
 ``` r
 # Statistical Test (ANOVA)
@@ -343,11 +343,6 @@ Alternative Hypothesis
 -   Consumption of contaminated water causes gastroenteritis.
 
 ``` r
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(knitr)
-
 # import dataset
 gastroe <- read.csv("hotzone.csv")
 gastro <- tbl_df(gastroe)
@@ -405,7 +400,7 @@ par(xpd = TRUE)
 legend("topright", c("< 1 glass/day", "< 4 glasses/day", "1 to 4 glasses/day"), bty = "n", fill = c("black", "red", "grey"))
 ```
 
-<img src="./figures.the_hot_zone-1.svg" style="display: block; margin: auto;" />
+![](README_files/figure-markdown_github/the_hot_zone-1.png)
 
 ``` r
 # Statistics (Pearson's Chi-squared Test)
@@ -452,12 +447,7 @@ Alternative Hypothesis
 -   Administration of 5HT3 receptor antagonist decreases nausea intensity.
 
 ``` r
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(knitr)
-
-# import dataset
+# import data set
 nnausea <- read.csv("nausea.csv")
 nausea <- tbl_df(nnausea)
 nausea
@@ -477,7 +467,8 @@ nausea
     ## 8       8             6           40
 
 ``` r
-# On the assumption that the value '40' in the "Nausea after" column was entered incorrectly I've changed the value to '4', as the current value exceeds the pain scale's range. 
+# Assuming that that the '40' in the dataset is an error (given that it exceeds the pain scale), I've changed it to '4'.
+
 nausea[8,3] = 4
 nausea
 ```
@@ -496,40 +487,48 @@ nausea
     ## 8       8             6            4
 
 ``` r
-# plot the data
-
-
-# Statistical test (Paired T-test)
-gastro.stat <- t.test(nausea$Nausea_before, nausea$Nausea_after, paired = TRUE)
-gastro.stat
+# plot dataset
+plot(nausea$Nausea_before~nausea$Patient,
+     col = "red",
+     type = "o",
+     ylim = c(0,6),
+     ylab = "Nausea Rating",
+     xlab = "Patient",
+     main = "Nausea intensity ratings before and after administration of a 5HT# receptor antagonist")
+lines(nausea$Nausea_after~nausea$Patient)
+points(nausea$Nausea_after~nausea$Patient)
+legend(4,6, c("Nausea before", "Nausea after"), fill = c("red", "black"))
 ```
 
+![](README_files/figure-markdown_github/Nausea-1.png)
+
+``` r
+# Statistical test (Wilcoxin Signed-rank test)
+wilcox.test(nausea$Nausea_before, nausea$Nausea_after, paired = TRUE)
+```
+
+    ## Warning in wilcox.test.default(nausea$Nausea_before, nausea$Nausea_after, :
+    ## cannot compute exact p-value with ties
+
     ## 
-    ##  Paired t-test
+    ##  Wilcoxon signed rank test with continuity correction
     ## 
     ## data:  nausea$Nausea_before and nausea$Nausea_after
-    ## t = 3.3072, df = 7, p-value = 0.01299
-    ## alternative hypothesis: true difference in means is not equal to 0
-    ## 95 percent confidence interval:
-    ##  0.7125121 4.2874879
-    ## sample estimates:
-    ## mean of the differences 
-    ##                     2.5
+    ## V = 34, p-value = 0.02897
+    ## alternative hypothesis: true location shift is not equal to 0
 
 Statistical Test
 ----------------
 
--   Paired T test
--   t = 3.3072, degrees of freedom = 7, p value = 0.01299
+-   Wilcoxin signed-rank test
 
 ### Test Assumptions:
 
--   Gaussian distribution
--   equal variance amongst groups
+-   central limit theorem applies
 -   independent errors
 -   effective data matching
 
 Outcome Analysis
 ================
 
--   Ratings of nausea intensity significantly decreased following adminisatration of the 5HT3 receptor antagonist. Therefore reject the null hypothesis.
+-   Ratings of nausea intensity significantly decreased following adminisatration of the 5HT3 receptor antagonist. Therefore, reject the null hypothesis.
