@@ -397,7 +397,7 @@ barplot(gastroX, beside = TRUE,
         col = c("black", "red", "grey"))
 
 par(xpd = TRUE)
-legend("topright", c("< 1 glass/day", "< 4 glasses/day", "1 to 4 glasses/day"), bty = "n", fill = c("black", "red", "grey"))
+legend("topright", c("< 1 glass/day", "< 4 glasses/day", "> 4 glasses/day"), bty = "n", fill = c("black", "red", "grey"))
 ```
 
 ![](README_files/figure-markdown_github/the_hot_zone-1.png)
